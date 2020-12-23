@@ -1,1 +1,1 @@
-rm -f generate_test determinant
+rm -f generate_test determinant *.core
