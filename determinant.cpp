@@ -17,6 +17,7 @@ struct ToCompare {
 void LUP_decompositon(vector<vector<ld>> &a, vector<int> &p) {
 	const size_t n = (int)a.size();
 	size_t i;
+	#pragma omp parallel for private(i)
 	for (i = 0; i <= n; ++i) {
 		p[i] = i;
 	}
@@ -40,6 +41,7 @@ void LUP_decompositon(vector<vector<ld>> &a, vector<int> &p) {
 			p[n]++;
 		}
 
+		#pragma omp parallel for
 		for (j = i + 1; j < n; ++j) {
 			a[j][i] /= a[i][i];
 			for (k = i + 1; k < n; ++k) {
@@ -54,6 +56,7 @@ ld LUP_determinant(const vector<vector<ld>> &a, const vector<int> &p) {
 
 	int i;
 	ld result = a[0][0];
+	#pragma omp parallel for reduction(*:result)
 	for (i = 1; i < n; ++i) {
 		result *= a[i][i];
 	}
