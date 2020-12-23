@@ -10,11 +10,21 @@ using namespace std;
 typedef long double ld;
 
 struct ToCompare {
-	ld value;
 	size_t index;
+	ld value;
+
+	ToCompare(size_t index, ld value) {
+		this -> index = index;
+		this -> value = value;
+	}
+
+	ToCompare() {
+		index = 0;
+		value = 0;
+	}
 };
 
-void LUP_decompositon(vector<vector<ld>> &a, vector<int> &p) {
+void LUP_decompositon(vector<vector<ld>> &a, vector<size_t> &p) {
 	const size_t n = a.size();
 
 	#pragma omp parallel for
@@ -23,13 +33,20 @@ void LUP_decompositon(vector<vector<ld>> &a, vector<int> &p) {
 	}
 
 	for (size_t i = 0; i < n; ++i) {
-		ToCompare tc;
-		tc.index = i, tc.value = a[i][i];
+		vector<ToCompare> local_max(omp_get_max_threads(), ToCompare(i, 0.0));
 		for (size_t k = i; k < n; ++k) {
+			ToCompare &local = local_max[omp_get_thread_num()];
 			ld candidate = fabs(a[k][i]);
-			if (a[tc.index][i] <= candidate) {
-				tc.index = k;
-				tc.value = candidate;
+			if (local.value < candidate) {
+				local.index = k;
+				local.value = candidate;
+			}
+		}
+
+		ToCompare tc = local_max.front();
+		for (ToCompare local : local_max) {
+			if (tc.value < local.value) {
+				tc = local;
 			}
 		}
 
@@ -49,7 +66,7 @@ void LUP_decompositon(vector<vector<ld>> &a, vector<int> &p) {
 	}
 }
 
-ld LUP_determinant(const vector<vector<ld>> &a, const vector<int> &p) {
+ld LUP_determinant(const vector<vector<ld>> &a, const vector<size_t> &p) {
 	const size_t n = a.size();
 
 	ld result = a[0][0];
@@ -58,13 +75,8 @@ ld LUP_determinant(const vector<vector<ld>> &a, const vector<int> &p) {
 		result *= a[i][i];
 	}
 
-	if (p[n] - n == 0 || !result) {
-		return result;
-	} else {
-		return -result;
-	}
+	return (p[n] - n) % 2 == 0 ? result : -result;
 }
-
 
 int main(void) {
 	size_t n;
@@ -78,7 +90,7 @@ int main(void) {
 		}
 	}
 
-	vector<int> permutations(n + 1);
+	vector<size_t> permutations(n + 1);
 	LUP_decompositon(matrix, permutations);
 	cout << setprecision(8);
 	#ifndef TESTING
