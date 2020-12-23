@@ -32,8 +32,12 @@ void LUP_decompositon(vector<vector<ld>> &a, vector<size_t> &p) {
 		p[i] = i;
 	}
 
+	ToCompare local_max[omp_get_max_threads()];
 	for (size_t i = 0; i < n; ++i) {
-		vector<ToCompare> local_max(omp_get_max_threads(), ToCompare(i, 0.0));
+		for (ToCompare &el : local_max) {
+			el = ToCompare(i, 0.0);
+		}
+		#pragma omp parallel for shared(local_max)
 		for (size_t k = i; k < n; ++k) {
 			ToCompare &local = local_max[omp_get_thread_num()];
 			ld candidate = fabs(a[k][i]);
@@ -43,7 +47,7 @@ void LUP_decompositon(vector<vector<ld>> &a, vector<size_t> &p) {
 			}
 		}
 
-		ToCompare tc = local_max.front();
+		ToCompare tc = local_max[0];
 		for (ToCompare local : local_max) {
 			if (tc.value < local.value) {
 				tc = local;
