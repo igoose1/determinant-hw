@@ -9,77 +9,44 @@ using namespace std;
 
 typedef long double ld;
 
+const ld EPS = 1e-9;
 const size_t MAX_THREAD_NUM = omp_get_max_threads();
 
-struct ToCompare {
-	size_t index;
-	ld value;
+ld determinant(vector<vector<ld>> matrix) {
+	const size_t n = matrix.size();
+	ld result = 1;
 
-	ToCompare(size_t index, ld value) {
-		this -> index = index;
-		this -> value = value;
-	}
-
-	ToCompare() {
-		index = 0;
-		value = 0;
-	}
-};
-
-void LUP_decompositon(vector<vector<ld>> &a, vector<size_t> &p) {
-	const size_t n = a.size();
-
-	for (size_t i = 0; i <= n; ++i) {
-		p[i] = i;
-	}
-
-	ToCompare local_max[MAX_THREAD_NUM];
 	for (size_t i = 0; i < n; ++i) {
-		for (ToCompare &el : local_max) {
-			el = ToCompare(i, 0.0);
-		}
-		#pragma omp parallel for
-		for (size_t k = i; k < n; ++k) {
-			ToCompare &local = local_max[omp_get_thread_num()];
-			ld candidate = fabs(a[k][i]);
-			if (local.value < candidate) {
-				local.index = k;
-				local.value = candidate;
+		size_t maxi = i;
+		for (size_t j = i; j < n; ++j) {
+			if (fabs(matrix[maxi][i]) > fabs(matrix[j][i])) {
+				maxi = j;
 			}
 		}
-
-		ToCompare tc = local_max[0];
-		for (ToCompare local : local_max) {
-			if (tc.value < local.value) {
-				tc = local;
-			}
+		if (maxi != i) {
+			result *= -1;
 		}
-
-		if (tc.index != i) {
-			swap(p[i], p[tc.index]);
-			swap(a[i], a[tc.index]);
-			p[n]++;
+		if (fabs(matrix[maxi][i]) < EPS) {
+			return 0;
 		}
+		swap(matrix[i], matrix[maxi]);
 
+		result *= matrix[i][i];
 		for (size_t j = i + 1; j < n; ++j) {
-			a[j][i] /= a[i][i];
+			matrix[i][j] /= matrix[i][i];
+		}
+
+		for (size_t j = 0; j < n; ++j) {
+			if (j == i || fabs(matrix[j][i]) < EPS) {
+				continue;
+			}
 			for (size_t k = i + 1; k < n; ++k) {
-				a[j][k] -= a[j][i] * a[i][k];
+				matrix[j][k] -= matrix[i][k] * matrix[j][i];
 			}
 		}
 	}
-}
 
-ld LUP_determinant(const vector<vector<ld>> &a, const vector<size_t> &p) {
-	const size_t n = a.size();
-
-	ld result = a[0][0];
-	#pragma omp parallel for reduction(*:result)
-	for (size_t i = 1; i < n; ++i) {
-		result *= a[i][i];
-	}
-
-	return (p[n] - n) % 2 == 0 ? result : -result;
+	return result;
 }
 
 int main(void) {
@@ -94,12 +61,10 @@ int main(void) {
 		}
 	}
 
-	vector<size_t> permutations(n + 1);
-	LUP_decompositon(matrix, permutations);
 	cout << setprecision(8);
 	#ifndef TESTING
 	cout << "Determinant: ";
 	#endif
-	cout << LUP_determinant(matrix, permutations) << "\n";
+	cout << determinant(matrix) << "\n";
 }
 
