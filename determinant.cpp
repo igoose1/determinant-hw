@@ -9,6 +9,8 @@ using namespace std;
 
 typedef long double ld;
 
+const size_t MAX_THREAD_NUM = omp_get_max_threads();
+
 struct ToCompare {
 	size_t index;
 	ld value;
@@ -27,17 +29,16 @@ struct ToCompare {
 void LUP_decompositon(vector<vector<ld>> &a, vector<size_t> &p) {
 	const size_t n = a.size();
 
-	#pragma omp parallel for
 	for (size_t i = 0; i <= n; ++i) {
 		p[i] = i;
 	}
 
-	ToCompare local_max[omp_get_max_threads()];
+	ToCompare local_max[MAX_THREAD_NUM];
 	for (size_t i = 0; i < n; ++i) {
 		for (ToCompare &el : local_max) {
 			el = ToCompare(i, 0.0);
 		}
-		#pragma omp parallel for shared(local_max)
+		#pragma omp parallel for
 		for (size_t k = i; k < n; ++k) {
 			ToCompare &local = local_max[omp_get_thread_num()];
 			ld candidate = fabs(a[k][i]);
@@ -60,7 +61,6 @@ void LUP_decompositon(vector<vector<ld>> &a, vector<size_t> &p) {
 			p[n]++;
 		}
 
-		#pragma omp parallel for
 		for (size_t j = i + 1; j < n; ++j) {
 			a[j][i] /= a[i][i];
 			for (size_t k = i + 1; k < n; ++k) {
