@@ -3,3 +3,5 @@
 /determinant
 /generate_test
 .redo.*
+
+/plots/*.svg

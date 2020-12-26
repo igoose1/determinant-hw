@@ -1,0 +1,80 @@
+AMD EPYC (with IBPB) (8) @ 2.495GHz
+
+processor       : 0
+vendor_id       : AuthenticAMD
+cpu family      : 23
+model           : 1
+model name      : AMD EPYC Processor (with IBPB)
+stepping        : 2
+microcode       : 0x1000065
+cpu MHz         : 2495.310
+cache size      : 512 KB
+physical id     : 0
+siblings        : 8
+core id         : 0
+cpu cores       : 8
+apicid          : 0
+initial apicid  : 0
+fpu             : yes
+fpu_exception   : yes
+cpuid level     : 13
+wp              : yes
+flags           : fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat ps
+e36 clflush mmx fxsr sse sse2 ht syscall nx mmxext fxsr_opt pdpe1gb rdtscp lm rep_good
+ nopl cpuid extd_apicid tsc_known_freq pni pclmulqdq ssse3 fma cx16 sse4_1 sse4_2 x2ap
+ic movbe popcnt aes xsave avx f16c rdrand hypervisor lahf_lm cmp_legacy cr8_legacy abm
+ sse4a misalignsse 3dnowprefetch osvw topoext ssbd ibpb vmmcall fsgsbase bmi1 avx2 sme
+p bmi2 rdseed adx smap clflushopt sha_ni xsaveopt xsavec xgetbv1 arat
+bugs            : fxsave_leak sysret_ss_attrs spectre_v1 spectre_v2 spec_store_bypass
+bogomips        : 4990.62
+TLB size        : 1024 4K pages
+clflush size    : 64
+cache_alignment : 64
+address sizes   : 40 bits physical, 48 bits virtual
+power management:
+
+N		ONT		MS
+2800	-		70090	66887/73920/66265/73288
+2800	1		70786	75485/69392/66943/71325
+2800	2		49342
+2800	3		36246
+2800	4		27946
+2800	5		26558
+2800	6		22620
+2800	7		19523
+2800	8		15331
+2800	9		23737
+2800	10		22987
+2800	11		21733
+2800	12		20009
+2800	13		19932
+2800	14		19246
+2800	15		19092
+2800	16		19446
+
+
+N		ONT OS				MS
+2800	8	static			15675
+2800	8	static,1		14954
+2800	8	static,10		15179
+2800	8	static,100		15385
+2800	8	static,500		15295
+2800	8	static,1000		15167
+2800	8	static,5000		15656
+
+2800	8	dynamic			15421
+2800	8	dynamic,1		15441
+2800	8	dynamic,10		15257
+2800	8	dynamic,100		15625
+2800	8	dynamic,500		15254	14868/15641
+2800	8	dynamic,1000	15185	14785/15586
+2800	8	dynamic,5000	15042	14644/15441
+
+2800	8	guided			15250
+2800	8	guided,10		15675
+2800	8	guided,100		15182
+2800	8	guided,500		15355
+2800	8	guided,1000		15527
+2800	8	guided,5000		15299
+
+
