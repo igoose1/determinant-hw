@@ -5,9 +5,7 @@ using namespace std;
 
 int main(void) {
 	ios::sync_with_stdio(false);
-	cin.tie(NULL);
 	cout.tie(NULL);
-	cerr.tie(NULL);
 
 	int LIMIT = 10;
 	int FLOAT_LIMIT = 10;

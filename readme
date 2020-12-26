@@ -1,0 +1,45 @@
+Find determinant of a matrix with OpenMP
+========================================
+
+This project is a homework of computer architecture course.
+
+In this project few interesting files:
+
+	- determinant.cpp
+
+		This is why you are here. This code computes a determinant of a matrix
+		using as much cores OpenMP can find. It may be possible to compute
+		faster but I couldn't figure out how.
+
+	- determinant.py
+
+		This is a Python solution powered by SymPy which was used for finding
+		answers on custom tests.
+
+	- generate_test.cpp
+
+		This is a C++ code for generating custom tests.
+
+	- all.do and other **/*.do files
+
+		These are redo targets for building binaries, testing and cleaning an
+		environment.
+
+		See https://cr.yp.to/redo.html. Use http://www.goredo.cypherpunks.ru.
+
+	- tests/*
+
+		These are custom tests: every `in` is a file of input and `expected` is
+		a file of expected output.
+
+	- plots/stats.txt
+
+		Results of benchmarking a program with different OMP_THREADS_NUM and
+		OMP_SCHEDULE. All computing was done on AMD EPYC processor.
+
+If you don't use redo you can get a binary with a similar command
+
+	c++ -DTESTING -Wall -std=c++11 -O2 -fopenmp \
+		determinant.cpp \
+		-o determinant
+
