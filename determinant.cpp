@@ -19,7 +19,7 @@ ld determinant(vector<vector<ld>> matrix) {
 	for (size_t i = 0; i < n; ++i) {
 		size_t maxi = i;
 		for (size_t j = i; j < n; ++j) {
-			if (fabs(matrix[maxi][i]) > fabs(matrix[j][i])) {
+			if (fabs(matrix[j][i]) > fabs(matrix[maxi][i])) {
 				maxi = j;
 			}
 		}
