@@ -32,16 +32,20 @@ ld determinant(vector<vector<ld>> matrix) {
 		swap(matrix[i], matrix[maxi]);
 
 		result *= matrix[i][i];
+		const ld divide_by = matrix[i][i];
+		#pragma omp parallel for
 		for (size_t j = i + 1; j < n; ++j) {
-			matrix[i][j] /= matrix[i][i];
+			matrix[i][j] /= divide_by;
 		}
 
+		const vector<ld> &line = matrix[i];
+		#pragma omp parallel for
 		for (size_t j = 0; j < n; ++j) {
 			if (j == i || fabs(matrix[j][i]) < EPS) {
 				continue;
 			}
 			for (size_t k = i + 1; k < n; ++k) {
-				matrix[j][k] -= matrix[i][k] * matrix[j][i];
+				matrix[j][k] -= line[k] * matrix[j][i];
 			}
 		}
 	}
