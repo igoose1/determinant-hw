@@ -39,7 +39,7 @@ In this project few interesting files:
 
 If you don't use redo you can get a binary with a similar command
 
-	c++ -DTESTING -Wall -std=c++11 -O2 -fopenmp \
+	g++ -DTESTING -Wall -std=c++11 -O2 -fopenmp \
 		determinant.cpp \
 		-o determinant
 
