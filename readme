@@ -43,3 +43,5 @@ If you don't use redo you can get a binary with a similar command
 		determinant.cpp \
 		-o determinant
 
+determinant.cpp is licensed under Apache License, Version 2.0, see LICENSE
+file. All other code is stupid but for simplicity was unlicensed evidently.
