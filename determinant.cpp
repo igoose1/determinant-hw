@@ -11,8 +11,9 @@ using namespace std;
 
 typedef long double ld;
 
+int MAX_THREAD_NUM = omp_get_max_threads();
+
 const ld EPS = 1e-9;
-const int MAX_THREAD_NUM = omp_get_max_threads();
 
 ld determinant(vector<vector<ld>> matrix) {
 	const size_t n = matrix.size();
@@ -56,19 +57,36 @@ ld determinant(vector<vector<ld>> matrix) {
 
 
 int main(int argc, char *argv[]) {
+	const auto started_at = chrono::high_resolution_clock::now();
+
 #ifndef TESTING
 	if (argc < 2) {
-		cerr << "No output file provided.\n";
+		cerr << "No thread number provided.\n";
+		return 2;
+	}
+
+	MAX_THREAD_NUM = atoi(argv[1]);
+	cerr << MAX_THREAD_NUM << "\n";
+	omp_set_num_threads(MAX_THREAD_NUM);
+
+	if (argc < 3) {
+		cerr << "No input file provided.\n";
 		return 1;
 	}
 
-	if (!freopen(argv[1], "w", stdout)) {
-		cerr << "Couldn't write to provided output file.\n";
+	if (!freopen(argv[2], "r", stdin)) {
+		cerr << "Couldn't open file for reading.\n";
 		return 1;
+	}
+
+	if (argc > 3) {
+		if (!freopen(argv[3], "w", stdout)) {
+			cerr << "Couldn't open file for writing.\n";
+			return 1;
+		}
 	}
 #endif
 
-	const auto started_at = chrono::high_resolution_clock::now();
 	size_t n;
 	cin >> n;
 
@@ -83,6 +101,7 @@ int main(int argc, char *argv[]) {
 	const auto scanned_at = chrono::high_resolution_clock::now();
 
 	cout << setprecision(8);
+	cerr << setprecision(8);
 #ifndef TESTING
 	cout << "Determinant: ";
 #endif
