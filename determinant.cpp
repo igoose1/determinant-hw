@@ -5,6 +5,7 @@
 #include <cmath>
 #include <vector>
 #include <chrono>
+#include <stdio.h>
 
 using namespace std;
 
@@ -54,7 +55,19 @@ ld determinant(vector<vector<ld>> matrix) {
 }
 
 
-int main(void) {
+int main(int argc, char *argv[]) {
+#ifndef TESTING
+	if (argc < 2) {
+		cerr << "No output file provided.\n";
+		return 1;
+	}
+
+	if (!freopen(argv[1], "w", stdout)) {
+		cerr << "Couldn't write to provided output file.\n";
+		return 1;
+	}
+#endif
+
 	const auto started_at = chrono::high_resolution_clock::now();
 	size_t n;
 	cin >> n;
@@ -70,26 +83,34 @@ int main(void) {
 	const auto scanned_at = chrono::high_resolution_clock::now();
 
 	cout << setprecision(8);
-	#ifndef TESTING
+#ifndef TESTING
 	cout << "Determinant: ";
-	#endif
+#endif
 	cout << determinant(matrix) << "\n";
 
 	const auto computed_at = chrono::high_resolution_clock::now();
-	#ifdef TESTING
+#ifdef TESTING
 	cerr << "Done in "
-		<< chrono::duration_cast<std::chrono::milliseconds>(computed_at - started_at).count() << "ms.\n"
+		<< chrono::duration_cast<std::chrono::milliseconds>(
+				computed_at - started_at
+			).count() << "ms.\n"
 		<< "Scanned in "
-		<< chrono::duration_cast<std::chrono::milliseconds>(scanned_at - started_at).count() << "ms.\n"
+		<< chrono::duration_cast<std::chrono::milliseconds>(
+				scanned_at - started_at
+			).count() << "ms.\n"
 		<< "Computed in "
-		<< chrono::duration_cast<std::chrono::milliseconds>(computed_at - scanned_at).count() << "ms.\n";
-	#else
+		<< chrono::duration_cast<std::chrono::milliseconds>(
+				computed_at - scanned_at
+			).count() << "ms.\n";
+#else
 	fprintf(
 		stderr,
 		"\nTime (%i thread(s)): %f ms.\n",
 		MAX_THREAD_NUM,
-		(double)chrono::duration_cast<std::chrono::milliseconds>(computed_at - scanned_at).count()
+		(double)chrono::duration_cast<std::chrono::milliseconds>(
+			computed_at - scanned_at
+		).count()
 	);
-	#endif
+#endif
 }
 
